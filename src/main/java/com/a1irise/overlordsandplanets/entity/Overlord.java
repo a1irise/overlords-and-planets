@@ -26,13 +26,12 @@ public class Overlord {
     private String name;
 
     @Column(name = "age", nullable = false)
-    private long age;
+    private int age;
 
-    @Transient
     @OneToMany(mappedBy = "overlord", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Planet> planets = new ArrayList<>();
 
-    public Overlord(String name, long age) {
+    public Overlord(String name, int age) {
         this.name = name;
         this.age = age;
     }

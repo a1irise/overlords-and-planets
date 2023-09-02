@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface PlanetRepository extends JpaRepository<Planet, Long> {
 
-    @Transactional
-    Long deleteByName(String name);
-
     Planet findByName(String name);
+
+    @Transactional
+    long deleteByName(String name);
 }
