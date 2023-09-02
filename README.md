@@ -37,6 +37,9 @@
 
 Написать тесты для этого функционала
 
+## Примеры запросов
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/23755479-8fb20d8a-edf7-48a3-89c9-edd8d48bdb77?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D23755479-8fb20d8a-edf7-48a3-89c9-edd8d48bdb77%26entityType%3Dcollection%26workspaceId%3D94c46e7c-7dc8-41cb-9647-813e9311d0f8)
+
 ## Использованные технологии
 
 - Java 17
