@@ -31,7 +31,7 @@ public class OverlordService {
 
     public void addOverlord(OverlordDto overlordDto) {
         if (overlordRepository.findByName(overlordDto.getName()) != null) {
-            throw new OverlordAlreadyExistsException();
+            throw new OverlordAlreadyExistsException("Overlord with name \"" + overlordDto.getName() + "\" already exists.");
         }
 
         Overlord overlord = Mapper.toOverlord(overlordDto);

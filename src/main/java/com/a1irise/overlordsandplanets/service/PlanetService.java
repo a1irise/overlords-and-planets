@@ -28,7 +28,7 @@ public class PlanetService {
 
     public void addPlanet(PlanetDto planetDto) {
         if (planetRepository.findByName(planetDto.getName()) != null) {
-            throw new PlanetAlreadyExistsException();
+            throw new PlanetAlreadyExistsException("Planet with name \"" + planetDto.getName() + "\" already exists.");
         }
 
         Planet planet = Mapper.toPlanet(planetDto);
@@ -37,7 +37,7 @@ public class PlanetService {
 
     public void destroyPlanet(PlanetDto planetDto) {
         if (planetRepository.deleteByName(planetDto.getName()) == 0) {
-            throw new PlanetNotFoundException();
+            throw new PlanetNotFoundException("Planet with name \"" + planetDto.getName() + "\" not found.");
         }
     }
 
@@ -46,11 +46,11 @@ public class PlanetService {
         Overlord overlord = overlordRepository.findByName(overlordName);
 
         if (planet == null) {
-            throw new PlanetNotFoundException();
+            throw new PlanetNotFoundException("Planet with name \"" + planetName + "\" not found.");
         } else if (overlord == null) {
-            throw new OverlordNotFoundException();
+            throw new OverlordNotFoundException("Overlord with name \"" + overlordName + "\" not found.");
         } else if (planet.getOverlord() != null) {
-            throw new PlanetAlreadyHasOverlordException();
+            throw new PlanetAlreadyHasOverlordException("Planet with name \"" + planetName + "\" already has overlord.");
         }
 
         planet.setOverlord(overlord);

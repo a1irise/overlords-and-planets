@@ -1,7 +1,6 @@
 package com.a1irise.overlordsandplanets.controller;
 
 import com.a1irise.overlordsandplanets.dto.OverlordDto;
-import com.a1irise.overlordsandplanets.exception.OverlordAlreadyExistsException;
 import com.a1irise.overlordsandplanets.service.OverlordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,14 +25,7 @@ public class OverlordController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public ResponseEntity<String> add(@RequestBody OverlordDto overlordDto) {
-        try {
-            overlordService.addOverlord(overlordDto);
-        } catch (OverlordAlreadyExistsException e) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Overlord with name \"" + overlordDto.getName() + "\" already exists.");
-        }
-
+        overlordService.addOverlord(overlordDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("Overlord with name \"" + overlordDto.getName() + "\" added successfully.");
