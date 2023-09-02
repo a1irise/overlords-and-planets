@@ -50,7 +50,7 @@ public class PlanetService {
         } else if (overlord == null) {
             throw new OverlordNotFoundException("Overlord with name \"" + overlordName + "\" not found.");
         } else if (planet.getOverlord() != null) {
-            throw new PlanetAlreadyHasOverlordException("Planet with name \"" + planetName + "\" already has overlord.");
+            throw new PlanetAlreadyHasOverlordException("Planet with name \"" + planetName + "\" already has an overlord.");
         }
 
         planet.setOverlord(overlord);
