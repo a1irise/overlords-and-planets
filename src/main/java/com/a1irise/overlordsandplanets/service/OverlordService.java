@@ -29,13 +29,12 @@ public class OverlordService {
         this.planetRepository = planetRepository;
     }
 
-    public void addOverlord(OverlordDto overlordDto) {
-        if (overlordRepository.findByName(overlordDto.getName()) != null) {
+    public OverlordDto addOverlord(OverlordDto overlordDto) {
+        if (overlordRepository.existsByName(overlordDto.getName())) {
             throw new OverlordAlreadyExistsException("Overlord with name \"" + overlordDto.getName() + "\" already exists.");
         }
 
-        Overlord overlord = Mapper.toOverlord(overlordDto);
-        overlordRepository.save(overlord);
+        return Mapper.toOverlordDto(overlordRepository.save(Mapper.toOverlord(overlordDto)));
     }
 
     public List<OverlordDto> findSlackers() {

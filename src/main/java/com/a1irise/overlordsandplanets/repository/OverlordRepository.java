@@ -13,6 +13,8 @@ public interface OverlordRepository extends JpaRepository<Overlord, Long> {
 
     Overlord findByName(String name);
 
+    boolean existsByName(String name);
+
     @Query("FROM Overlord")
     List<Overlord> findWithPageable(PageRequest pageRequest);
 }

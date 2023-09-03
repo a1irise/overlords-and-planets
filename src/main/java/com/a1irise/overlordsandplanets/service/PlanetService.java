@@ -26,22 +26,23 @@ public class PlanetService {
         this.overlordRepository = overlordRepository;
     }
 
-    public void addPlanet(PlanetDto planetDto) {
-        if (planetRepository.findByName(planetDto.getName()) != null) {
+    public PlanetDto addPlanet(PlanetDto planetDto) {
+        if (planetRepository.existsByName(planetDto.getName())) {
             throw new PlanetAlreadyExistsException("Planet with name \"" + planetDto.getName() + "\" already exists.");
         }
 
-        Planet planet = Mapper.toPlanet(planetDto);
-        planetRepository.save(planet);
+        return Mapper.toPlanetDto(planetRepository.save(Mapper.toPlanet(planetDto)));
     }
 
     public void destroyPlanet(PlanetDto planetDto) {
-        if (planetRepository.deleteByName(planetDto.getName()) == 0) {
+        if (!planetRepository.existsByName(planetDto.getName())) {
             throw new PlanetNotFoundException("Planet with name \"" + planetDto.getName() + "\" not found.");
         }
+
+        planetRepository.deleteByName(planetDto.getName());
     }
 
-    public void assignOverlord(String planetName, String overlordName) {
+    public PlanetDto assignOverlord(String planetName, String overlordName) {
         Planet planet = planetRepository.findByName(planetName);
         Overlord overlord = overlordRepository.findByName(overlordName);
 
@@ -54,6 +55,6 @@ public class PlanetService {
         }
 
         planet.setOverlord(overlord);
-        planetRepository.save(planet);
+        return Mapper.toPlanetDto(planetRepository.save(planet));
     }
 }

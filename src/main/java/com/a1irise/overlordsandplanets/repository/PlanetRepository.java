@@ -10,6 +10,8 @@ public interface PlanetRepository extends JpaRepository<Planet, Long> {
 
     Planet findByName(String name);
 
+    boolean existsByName(String name);
+
     @Transactional
-    long deleteByName(String name);
+    void deleteByName(String name);
 }
