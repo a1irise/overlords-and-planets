@@ -46,4 +46,7 @@
 - Spring Boot
 - Lombok
 - PostgreSQL
+- JUnit 5
+- Mockito
+- AssertJ
 - Gradle
