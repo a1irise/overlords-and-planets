@@ -2,6 +2,7 @@ package com.a1irise.overlordsandplanets.controller;
 
 import com.a1irise.overlordsandplanets.dto.PlanetDto;
 import com.a1irise.overlordsandplanets.service.PlanetService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,7 @@ public class PlanetController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "")
-    public ResponseEntity<Void> addPlanet(@RequestBody PlanetDto planetDto) {
+    public ResponseEntity<Void> addPlanet(@RequestBody @Valid PlanetDto planetDto) {
         PlanetDto planet = planetService.addPlanet(planetDto);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                         .path("/{id}")

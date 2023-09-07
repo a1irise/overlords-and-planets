@@ -2,6 +2,7 @@ package com.a1irise.overlordsandplanets.controller;
 
 import com.a1irise.overlordsandplanets.dto.OverlordDto;
 import com.a1irise.overlordsandplanets.service.OverlordService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class OverlordController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> addOverlord(@RequestBody OverlordDto overlordDto) {
+    public ResponseEntity<Void> addOverlord(@RequestBody @Valid OverlordDto overlordDto) {
         OverlordDto overlord = overlordService.addOverlord(overlordDto);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                         .path("/{id}")
