@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OverlordDto {
+public class ErrorDto {
 
-    private long id;
-    private String name;
-    private int age;
+    private String message;
 }

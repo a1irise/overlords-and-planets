@@ -3,62 +3,59 @@ package com.a1irise.overlordsandplanets.service;
 import com.a1irise.overlordsandplanets.dto.Mapper;
 import com.a1irise.overlordsandplanets.dto.OverlordDto;
 import com.a1irise.overlordsandplanets.entity.Overlord;
-import com.a1irise.overlordsandplanets.entity.Planet;
 import com.a1irise.overlordsandplanets.exception.OverlordAlreadyExistsException;
+import com.a1irise.overlordsandplanets.exception.OverlordNotFoundException;
 import com.a1irise.overlordsandplanets.repository.OverlordRepository;
-import com.a1irise.overlordsandplanets.repository.PlanetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class OverlordService {
 
     private OverlordRepository overlordRepository;
-    private PlanetRepository planetRepository;
 
     @Autowired
-    public OverlordService(OverlordRepository overlordRepository,
-                           PlanetRepository planetRepository) {
+    public OverlordService(OverlordRepository overlordRepository) {
         this.overlordRepository = overlordRepository;
-        this.planetRepository = planetRepository;
     }
 
     public OverlordDto addOverlord(OverlordDto overlordDto) {
-        if (overlordRepository.existsByName(overlordDto.getName())) {
-            throw new OverlordAlreadyExistsException("Overlord with name \"" + overlordDto.getName() + "\" already exists.");
+        if (overlordRepository.findByName(overlordDto.getName()).isPresent()) {
+            throw new OverlordAlreadyExistsException("Overlord already exists.");
         }
 
         return Mapper.toOverlordDto(overlordRepository.save(Mapper.toOverlord(overlordDto)));
     }
 
-    public List<OverlordDto> findSlackers() {
-        List<Overlord> all = overlordRepository.findAll();
-        List<Overlord> busy = planetRepository.findAll()
+    public void deleteOverlord(long id) {
+        overlordRepository.findById(id).ifPresent(overlordRepository::delete);
+    }
+
+    public OverlordDto getById(long id) {
+        Overlord overlord = overlordRepository.findById(id)
+                .orElseThrow(()-> new OverlordNotFoundException("Overlord not found."));
+
+        return Mapper.toOverlordDto(overlord);
+    }
+
+    public List<OverlordDto> getAll() {
+        return overlordRepository.findAll()
                 .stream()
-                .map(Planet::getOverlord)
-                .filter(Objects::nonNull)
-                .distinct()
+                .map(Mapper::toOverlordDto)
                 .toList();
+    }
 
-        List<OverlordDto> slackers = new ArrayList<>();
-        for (Overlord overlord: all) {
-            if (!busy.contains(overlord)) {
-                slackers.add(Mapper.toOverlordDto(overlord));
-            }
-        }
-
-        return slackers;
+    public List<OverlordDto> findSlackers() {
+        return overlordRepository.findAllSlackers()
+                .stream()
+                .map(Mapper::toOverlordDto)
+                .toList();
     }
 
     public List<OverlordDto> findTopTenYoungest() {
-        PageRequest topTen = PageRequest.of(0, 10, Sort.Direction.ASC, "age");
-        return overlordRepository.findWithPageable(topTen)
+        return overlordRepository.findTop10ByOrderByAgeAsc()
                 .stream()
                 .map(Mapper::toOverlordDto)
                 .toList();

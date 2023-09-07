@@ -19,10 +19,11 @@ public class Planet {
     @Column(name = "id", nullable = false)
     private long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "overlord_id")
     private Overlord overlord;
 
     public Planet(String name) {

@@ -3,16 +3,15 @@ package com.a1irise.overlordsandplanets.controller;
 import com.a1irise.overlordsandplanets.dto.PlanetDto;
 import com.a1irise.overlordsandplanets.service.PlanetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
 
 @Controller
-@RequestMapping(value = "/api/planet")
+@RequestMapping(value = "/api/v1/planets")
 public class PlanetController {
 
     private PlanetService planetService;
@@ -22,26 +21,38 @@ public class PlanetController {
         this.planetService = planetService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/add")
-    public ResponseEntity<String> add(@RequestBody PlanetDto planetDto) {
-        planetService.addPlanet(planetDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Planet with name \"" + planetDto.getName() + "\" added successfully.");
+    @RequestMapping(method = RequestMethod.POST, value = "")
+    public ResponseEntity<Void> addPlanet(@RequestBody PlanetDto planetDto) {
+        PlanetDto planet = planetService.addPlanet(planetDto);
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(planet.getId())
+                        .toUri())
+                .build();
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/destroy")
-    public ResponseEntity<String> destroy(@RequestBody PlanetDto planetDto) {
-        planetService.destroyPlanet(planetDto);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Planet with name \"" + planetDto.getName() + "\" destroyed successfully.");
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}/overlord")
+    public ResponseEntity<Void> assignOverlord(@PathVariable(name = "id") long planetId,
+                                               @RequestParam(name = "overlordId") long overlordId) {
+        PlanetDto planet = planetService.assignOverlord(planetId, overlordId);
+        return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, value = "/assign-overlord")
-    public ResponseEntity<String> assignOverlord(@RequestParam(name = "planetName") String planetName,
-                                                 @RequestParam(name = "overlordName") String overlordName) {
-        planetService.assignOverlord(planetName, overlordName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Overlord with name \"" + overlordName +
-                        "\" successfully assigned to planet with name \"" + planetName + "\".");
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public ResponseEntity<Void> deletePlanet(@PathVariable(name = "id") long id) {
+        planetService.deletePlanet(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity<PlanetDto> getById(@PathVariable(name = "id") long id) {
+        PlanetDto planet = planetService.getById(id);
+        return ResponseEntity.ok(planet);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "")
+    public ResponseEntity<List<PlanetDto>> getAll() {
+        List<PlanetDto> planets = planetService.getAll();
+        return ResponseEntity.ok(planets);
     }
 }

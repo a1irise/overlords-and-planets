@@ -11,5 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PlanetDto {
 
+    private long id;
     private String name;
+    private OverlordDto overlordDto;
 }

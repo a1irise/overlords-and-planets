@@ -13,6 +13,8 @@ import com.a1irise.overlordsandplanets.repository.PlanetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlanetService {
 
@@ -27,34 +29,43 @@ public class PlanetService {
     }
 
     public PlanetDto addPlanet(PlanetDto planetDto) {
-        if (planetRepository.existsByName(planetDto.getName())) {
-            throw new PlanetAlreadyExistsException("Planet with name \"" + planetDto.getName() + "\" already exists.");
+        if (planetRepository.findByName(planetDto.getName()).isPresent()) {
+            throw new PlanetAlreadyExistsException("Planet already exists.");
         }
 
         return Mapper.toPlanetDto(planetRepository.save(Mapper.toPlanet(planetDto)));
     }
 
-    public void destroyPlanet(PlanetDto planetDto) {
-        if (!planetRepository.existsByName(planetDto.getName())) {
-            throw new PlanetNotFoundException("Planet with name \"" + planetDto.getName() + "\" not found.");
-        }
-
-        planetRepository.deleteByName(planetDto.getName());
+    public void deletePlanet(long id) {
+        planetRepository.findById(id).ifPresent(planetRepository::delete);
     }
 
-    public PlanetDto assignOverlord(String planetName, String overlordName) {
-        Planet planet = planetRepository.findByName(planetName);
-        Overlord overlord = overlordRepository.findByName(overlordName);
+    public PlanetDto assignOverlord(long planetId, long overlordId) {
+        Planet planet = planetRepository.findById(planetId)
+                .orElseThrow(()-> new PlanetNotFoundException("Planet not found."));
+        Overlord overlord = overlordRepository.findById(overlordId)
+                .orElseThrow(() -> new OverlordNotFoundException("Overlord not found."));
 
-        if (planet == null) {
-            throw new PlanetNotFoundException("Planet with name \"" + planetName + "\" not found.");
-        } else if (overlord == null) {
-            throw new OverlordNotFoundException("Overlord with name \"" + overlordName + "\" not found.");
-        } else if (planet.getOverlord() != null) {
-            throw new PlanetAlreadyHasOverlordException("Planet with name \"" + planetName + "\" already has an overlord.");
+        if (planet.getOverlord() != null) {
+            throw new PlanetAlreadyHasOverlordException("Planet already has an overlord.");
         }
 
         planet.setOverlord(overlord);
+
         return Mapper.toPlanetDto(planetRepository.save(planet));
+    }
+
+    public PlanetDto getById(long id) {
+        Planet planet = planetRepository.findById(id)
+                .orElseThrow(()-> new PlanetNotFoundException("Planet not found."));
+
+        return Mapper.toPlanetDto(planet);
+    }
+
+    public List<PlanetDto> getAll() {
+        return planetRepository.findAll()
+                .stream()
+                .map(Mapper::toPlanetDto)
+                .toList();
     }
 }
