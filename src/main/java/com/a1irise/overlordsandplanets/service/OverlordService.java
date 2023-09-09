@@ -30,17 +30,17 @@ public class OverlordService {
     }
 
     public void deleteOverlord(long id) {
-        overlordRepository.findById(id).ifPresent(overlordRepository::delete);
+        overlordRepository.deleteById(id);
     }
 
-    public OverlordDto getById(long id) {
+    public OverlordDto findById(long id) {
         Overlord overlord = overlordRepository.findById(id)
                 .orElseThrow(()-> new OverlordNotFoundException("Overlord not found."));
 
         return Mapper.toOverlordDto(overlord);
     }
 
-    public List<OverlordDto> getAll() {
+    public List<OverlordDto> findAll() {
         return overlordRepository.findAll()
                 .stream()
                 .map(Mapper::toOverlordDto)

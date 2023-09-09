@@ -47,13 +47,13 @@ public class PlanetController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<PlanetDto> getById(@PathVariable(name = "id") long id) {
-        PlanetDto planet = planetService.getById(id);
+        PlanetDto planet = planetService.findById(id);
         return ResponseEntity.ok(planet);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ResponseEntity<List<PlanetDto>> getAll() {
-        List<PlanetDto> planets = planetService.getAll();
+        List<PlanetDto> planets = planetService.findAll();
         return ResponseEntity.ok(planets);
     }
 }

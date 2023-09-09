@@ -43,13 +43,13 @@ public class OverlordController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<OverlordDto> getById(@PathVariable(name = "id") long id) {
-        OverlordDto overlord = overlordService.getById(id);
+        OverlordDto overlord = overlordService.findById(id);
         return ResponseEntity.ok(overlord);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "")
     public ResponseEntity<List<OverlordDto>> getAll() {
-        List<OverlordDto> overlords = overlordService.getAll();
+        List<OverlordDto> overlords = overlordService.findAll();
         return ResponseEntity.ok(overlords);
     }
 

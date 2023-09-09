@@ -22,4 +22,8 @@ public class PlanetDto {
     private String name;
 
     private OverlordDto overlord;
+
+    public PlanetDto(String name) {
+        this.name = name;
+    }
 }

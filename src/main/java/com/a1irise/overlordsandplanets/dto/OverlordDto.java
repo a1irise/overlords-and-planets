@@ -21,7 +21,12 @@ public class OverlordDto {
 
     @NotEmpty(message = "Age should not be empty")
     @Pattern(regexp = "[0-9]+", message = "Age should be a number")
-    @Min(value = 0, message = "Age cannot be negative")
+    @Min(value = 0, message = "Age should not be negative")
     @Max(value = 1000000, message = "Age should not be greater than 1000000")
     private int age;
+
+    public OverlordDto(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
 }

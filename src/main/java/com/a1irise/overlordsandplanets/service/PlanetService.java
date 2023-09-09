@@ -36,10 +36,6 @@ public class PlanetService {
         return Mapper.toPlanetDto(planetRepository.save(Mapper.toPlanet(planetDto)));
     }
 
-    public void deletePlanet(long id) {
-        planetRepository.findById(id).ifPresent(planetRepository::delete);
-    }
-
     public PlanetDto assignOverlord(long planetId, long overlordId) {
         Planet planet = planetRepository.findById(planetId)
                 .orElseThrow(()-> new PlanetNotFoundException("Planet not found."));
@@ -55,14 +51,18 @@ public class PlanetService {
         return Mapper.toPlanetDto(planetRepository.save(planet));
     }
 
-    public PlanetDto getById(long id) {
+    public void deletePlanet(long id) {
+        planetRepository.deleteById(id);
+    }
+
+    public PlanetDto findById(long id) {
         Planet planet = planetRepository.findById(id)
                 .orElseThrow(()-> new PlanetNotFoundException("Planet not found."));
 
         return Mapper.toPlanetDto(planet);
     }
 
-    public List<PlanetDto> getAll() {
+    public List<PlanetDto> findAll() {
         return planetRepository.findAll()
                 .stream()
                 .map(Mapper::toPlanetDto)
